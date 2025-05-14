@@ -166,4 +166,4 @@ Status Code : 404 Not Found
 Status Code : 500 Internal Server Error
 
 ## ERD
-![Schedule.png](docs/Schedule.png)
+[![Schedule.png](docs/Schedule.png)](https://github.com/taehunim/schedule/blob/main/Schedule.png)
