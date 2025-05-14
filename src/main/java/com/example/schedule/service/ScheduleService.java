@@ -2,6 +2,7 @@ package com.example.schedule.service;
 
 import com.example.schedule.domain.ScheduleObject;
 import com.example.schedule.dto.RequestDto;
+import com.example.schedule.dto.RequestDtoToUpdate;
 import com.example.schedule.dto.ResponseDto;
 import com.example.schedule.repository.ScheduleRepository;
 import org.springframework.http.HttpStatus;
@@ -60,6 +61,15 @@ public class ScheduleService {
             responseDtoList.add(new ResponseDto(scheduleObject));
         }
         return responseDtoList;
+    }
+
+    public int updateSchedule(Long id, RequestDtoToUpdate dto) {
+        LocalDateTime now = LocalDateTime.now();
+        return scheduleRepository.updateSchedule(id, dto.getTitle(), dto.getContents(), dto.getPassword(), now);
+    }
+
+    public int removeSchedule(Long id) {
+        return scheduleRepository.removeSchedule(id);
     }
 
     private ResponseDto makeResponseDto(ScheduleObject scheduleObject) {

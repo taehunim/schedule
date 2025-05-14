@@ -1,10 +1,12 @@
 package com.example.schedule.repository;
 
 import com.example.schedule.domain.ScheduleObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -77,8 +79,22 @@ public class ScheduleRepository {
     }
 
     public List<ScheduleObject> searchUserNameAndDate(String userName, LocalDate date) {
-        String sql = "select * from schedule where userName like ? or date(updateDate) = ? order by updatedate";
+        String sql = "select * from schedule where userName = ? or date(updateDate) = ? order by updateDate desc";
         return jdbcTemplate.query(sql, scheduleObjectRowMapper(), userName, date);
+    }
+
+    public int updateSchedule(Long id, String title, String contents, String password, LocalDateTime date) {
+        String sql = "update schedule set title = ?, contents = ?, updateDate = ? where scheduleId = ?";
+        if (password.equals(findScheduleById(id).get().getPassword())) {
+            return jdbcTemplate.update(sql, title, contents, date, id);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong password");
+        }
+    }
+
+    public int removeSchedule(Long id) {
+        String sql = "delete from schedule where scheduleId = ?";
+        return jdbcTemplate.update(sql, id);
     }
 
 
@@ -108,6 +124,5 @@ public class ScheduleRepository {
             }
         };
     }
-
 }
 

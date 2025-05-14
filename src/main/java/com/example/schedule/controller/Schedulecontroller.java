@@ -1,19 +1,16 @@
 package com.example.schedule.controller;
 
-import com.example.schedule.domain.ScheduleObject;
 import com.example.schedule.dto.RequestDto;
+import com.example.schedule.dto.RequestDtoToUpdate;
 import com.example.schedule.dto.ResponseDto;
 import com.example.schedule.service.ScheduleService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -43,7 +40,7 @@ public class Schedulecontroller {
     // 단 건 조회
     @GetMapping("/{id}")
     public ResponseEntity<ResponseDto> findScheduleById(@PathVariable Long id) {
-        return new ResponseEntity<>(scheduleService.findScheduleById(id),HttpStatus.OK);
+        return new ResponseEntity<>(scheduleService.findScheduleById(id), HttpStatus.OK);
     }
 
     // 날짜 이름으로 조회
@@ -54,6 +51,20 @@ public class Schedulecontroller {
     ) {
         List<ResponseDto> results = scheduleService.searchUserNameAndDate(userName, date);
         return new ResponseEntity<>(results, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Integer> updateSchedule(
+            @PathVariable Long id,
+            @RequestBody RequestDtoToUpdate dto
+            ) {
+        int scheduleId = scheduleService.updateSchedule(id, dto);
+        return new ResponseEntity<>(scheduleId, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public int removeSchedule(@PathVariable Long id) {
+        return scheduleService.removeSchedule(id);
     }
 
 }
